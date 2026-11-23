@@ -1,0 +1,44 @@
+# 分支源（main / 根目录）需要 pages=write，当前部署令牌没有这项权限。
+# 用官方 Pages Action 发布仓库根目录的静态站点；不经过 Jekyll，也不上传用户图片。
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Stage site root
+        run: |
+          mkdir -p _site
+          tar --exclude=_site --exclude=.git -cf - . | tar -C _site -xf -
+
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
