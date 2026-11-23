@@ -28,6 +28,9 @@ jobs:
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
+        with:
+          # 仓库还没开 Pages 时，用工作流令牌自动改成 GitHub Actions 发布。
+          enablement: true
 
       - name: Stage site root
         run: |
