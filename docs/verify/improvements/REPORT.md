@@ -16,6 +16,7 @@ Pages 没能打开的原因：创建站点需要 `administration:write` 和 `pag
 
 - https://github.com/wu08130612-ai/bead-pattern-mvp/actions/runs/45137327589 失败（站点不存在，`configure-pages` 默认不创建）
 - https://github.com/wu08130612-ai/bead-pattern-mvp/actions/runs/45137987994 失败（`enablement: true` 去创建站点，返回 `Resource not accessible by integration`）
+- https://github.com/wu08130612-ai/bead-pattern-mvp/actions/runs/45140334485 失败（本次改进推上 `main` 之后；`enablement` 已改回 false，仍然是 Get Pages site Not Found）
 
 分支源（Settings 里选 Deploy from branch `main` / `/`）同样需要这项权限，这个环境设不了。工作流已改回不带 `enablement`。仓库所有者需要自己在 **Settings → Pages** 里选一次 **GitHub Actions**（或 Deploy from a branch：`main` / root）。选好之后，再跑 `.github/workflows/pages.yml` 就会把根目录发出去。成功发布要多久，这次没测到。
 
