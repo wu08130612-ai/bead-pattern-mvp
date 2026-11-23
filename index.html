@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>照片转拼豆图纸 · 本地生成</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+  <header class="top">
+    <h1>照片转拼豆图纸</h1>
+    <p>上传照片 → 选尺寸和颜色数 → 得到带色号、行列号和用料清单的图纸，可导出 PNG 或打印成 PDF。</p>
+  </header>
+
+  <div class="layout">
+    <!-- 左侧：参数 -->
+    <aside class="panel">
+      <section>
+        <h2>1. 上传图片</h2>
+        <label id="drop" class="drop" tabindex="0">
+          <input id="file" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+          <span class="drop-main">点击选择或拖拽图片到这里</span>
+          <span class="drop-sub">支持 JPG / PNG / WEBP，图片只在本机处理</span>
+        </label>
+        <div id="srcWrap" class="src-wrap" hidden>
+          <img id="srcImg" alt="原图预览">
+          <div id="srcInfo" class="muted"></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>2. 网格尺寸</h2>
+        <div class="seg" id="sizePreset">
+          <button data-size="29x29">29×29</button>
+          <button data-size="50x50" class="on">50×50</button>
+          <button data-size="custom">自定义</button>
+        </div>
+        <div class="row" id="customSize" hidden>
+          <label>宽 <input id="gw" type="number" min="10" max="200" value="50"></label>
+          <span>×</span>
+          <label>高 <input id="gh" type="number" min="10" max="200" value="50"></label>
+          <button id="ratioBtn" type="button" title="按原图比例计算高度">按原图比例</button>
+        </div>
+        <p class="hint">范围 10–200 格。常见方形板为 29×29（小板）。</p>
+        <div class="row">
+          <label class="radio"><input type="radio" name="fit" value="cover" checked> 裁剪填满</label>
+          <label class="radio"><input type="radio" name="fit" value="contain"> 完整入画（留边）</label>
+        </div>
+      </section>
+
+      <section>
+        <h2>3. 颜色</h2>
+        <label>色板
+          <select id="palette"></select>
+        </label>
+        <label>颜色数上限
+          <select id="maxColors">
+            <option value="8">8 色</option>
+            <option value="16">16 色</option>
+            <option value="24" selected>24 色</option>
+            <option value="32">32 色</option>
+            <option value="48">48 色</option>
+            <option value="0">不限（全色板）</option>
+          </select>
+        </label>
+        <label>去杂点
+          <select id="denoise">
+            <option value="off">关闭</option>
+            <option value="light" selected>轻度（推荐）</option>
+            <option value="strong">较强</option>
+          </select>
+        </label>
+        <label class="check"><input id="special" type="checkbox"> 包含夜光/珠光/荧光/透明等特殊豆</label>
+      </section>
+
+      <section>
+        <h2>4. 背景</h2>
+        <label>透明像素
+          <select id="transparent">
+            <option value="empty" selected>留空（不拼）</option>
+            <option value="white">当作白色</option>
+          </select>
+        </label>
+        <label class="check"><input id="bgRemove" type="checkbox"> 去除与边缘相连的背景（留空）</label>
+        <label id="bgTolRow" hidden>背景容差 <input id="bgTol" type="range" min="4" max="40" value="14"> <span id="bgTolVal">14</span></label>
+      </section>
+
+      <section>
+        <h2>5. 显示与导出</h2>
+        <div class="seg" id="viewMode">
+          <button data-view="color">只看颜色</button>
+          <button data-view="label" class="on">颜色 + 编号</button>
+        </div>
+        <label>格内编号
+          <select id="labelType">
+            <option value="code" selected>色号（如 A23）</option>
+            <option value="no">序号（1、2、3…）</option>
+          </select>
+        </label>
+        <label>缩放 <input id="zoom" type="range" min="8" max="44" value="20"> <span id="zoomVal">20px</span></label>
+        <div class="row">
+          <label>打印方向
+            <select id="printOrient">
+              <option value="auto" selected>自动</option>
+              <option value="portrait">A4 竖向</option>
+              <option value="landscape">A4 横向</option>
+            </select>
+          </label>
+          <label>打印格子
+            <select id="printCell">
+              <option value="auto" selected>自动</option>
+              <option value="4">4 mm</option>
+              <option value="5">5 mm</option>
+              <option value="6">6 mm</option>
+            </select>
+          </label>
+        </div>
+        <div id="printInfo" class="hint"></div>
+        <div class="row">
+          <button id="btnPng" class="primary" disabled>导出 PNG</button>
+          <button id="btnPrint" class="primary" disabled>打印 / 存为 PDF</button>
+        </div>
+      </section>
+    </aside>
+
+    <!-- 右侧：图纸 -->
+    <main class="main">
+      <div id="empty" class="empty-state">
+        <div class="empty-grid" aria-hidden="true"></div>
+        <p>还没有图片。先在左侧上传一张人像或宠物照片。</p>
+        <p class="muted">建议：主体居中、背景简单的照片效果最好；50×50 适合头像，29×29 适合简单图案。</p>
+      </div>
+      <div id="result" hidden>
+        <div class="stats" id="stats"></div>
+        <div class="canvas-box"><canvas id="pattern"></canvas></div>
+        <h2 class="legend-title">图例 / 用料清单 <span class="muted">（点击某行可高亮该颜色，再点取消）</span></h2>
+        <table class="legend" id="legend">
+          <thead><tr><th>色块</th><th>序号</th><th>色号</th><th>名称</th><th>HEX</th><th>颗数</th><th>占比</th></tr></thead>
+          <tbody></tbody>
+          <tfoot></tfoot>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <footer class="foot">
+    <p><b>图片仅在本机浏览器处理，不上传到任何服务器。</b>不需要登录，也不收集任何数据。</p>
+    <p id="srcNote"></p>
+    <p class="muted">HEX 为第三方公开整理的屏幕参考色（厂商未公布官方 HEX），实物颜色以实体色卡为准。MARD、Perler 为各自所有者的商标，本工具与其无关。</p>
+  </footer>
+</div>
+
+<!-- 打印专用区域（屏幕上隐藏） -->
+<div id="print-root"></div>
+
+<script src="js/palettes.js"></script>
+<script src="js/color.js"></script>
+<script src="js/quantize.js"></script>
+<script src="js/render.js"></script>
+<script src="js/export.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

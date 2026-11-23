@@ -1,0 +1,13 @@
+50x50_24色_出图 {'页面内生成+绘制ms': 59.6, '含上传解码的总耗时ms': 123.8, 'ms': 59.59999999962747, 'W': 50, 'H': 50, 'colors': 24, 'beads': 2500}
+导出PNG {'文件': '/workspace/bead-pattern-mvp/docs/verify/export_50x50_mard_24.png', '建议文件名': '拼豆图纸_50x50_24色.png', '尺寸': {'width': 2216, 'height': 2830, 'size': 1042455}}
+打印PDF_50x50 {'布局': {'orient': 'portrait', 'cellMm': 3.7, 'cols': 50, 'rows': 61, 'tx': 1, 'ty': 1, 'pages': 1}, '文件': '/workspace/bead-pattern-mvp/docs/verify/print_50x50_mard_24.pdf'}
+29x29_Perler_16色 {'ms': 15.599999999627471, 'colors': 16, 'beads': 841, 'empty': 0}
+50x50_Mard_不限色 {'ms': 16.600000001490116, 'colors': 27, 'beads': 2500, 'empty': 0}
+100x100_Mard_32色 {'ms': 70.09999999962747, 'colors': 32, 'beads': 10000, 'empty': 0}
+打印PDF_100x100 {'布局': {'orient': 'landscape', 'cellMm': 5, 'cols': 53, 'rows': 27, 'tx': 2, 'ty': 4, 'pages': 8}}
+200x200_Mard_48色 {'ms': 166.90000000037253, 'colors': 42, 'beads': 40000, 'empty': 0}
+透明PNG_40x40_contain_8色 {'ms': 8.100000001490116, 'colors': 8, 'beads': 587, 'empty': 1013}
+console: []
+external requests: []
+print_50x50_mard_24 2 pages
+print_100x100_mard_32 9 pages
