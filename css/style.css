@@ -1,6 +1,7 @@
 /* ========== 基础 ========== */
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
+html { color-scheme: light; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 body { margin: 0; font: 14px/1.55 -apple-system, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; color: #1d1d1f; background: #f4f2ee; }
 h1 { margin: 0 0 4px; font-size: 22px; }
 h2 { font-size: 15px; margin: 0 0 8px; }
@@ -19,7 +20,7 @@ label select { margin-left: 6px; }
 .top { padding: 16px 24px 8px; }
 .top p { margin: 0; color: #555; }
 .layout { display: grid; grid-template-columns: 320px 1fr; gap: 16px; padding: 8px 24px 16px; align-items: start; }
-.panel { background: #fff; border-radius: 10px; padding: 14px 16px; box-shadow: 0 1px 3px rgba(0,0,0,.08); position: sticky; top: 8px; max-height: calc(100vh - 16px); overflow: auto; }
+.panel { background: #fff; border-radius: 10px; padding: 14px 16px; box-shadow: 0 1px 3px rgba(0,0,0,.08); position: sticky; top: 8px; max-height: calc(100vh - 16px); max-height: calc(100dvh - 16px); overflow: auto; }
 .panel section { padding: 10px 0; border-bottom: 1px solid #eee; }
 .panel section:last-child { border-bottom: 0; }
 .main { background: #fff; border-radius: 10px; padding: 16px; min-height: 520px; box-shadow: 0 1px 3px rgba(0,0,0,.08); min-width: 0; }
@@ -32,7 +33,9 @@ label select { margin-left: 6px; }
 .seg button.on { background: #1d1d1f; color: #fff; }
 
 /* 上传区 */
-.drop { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; border: 2px dashed #c9c4bb; border-radius: 10px; padding: 22px 10px; cursor: pointer; text-align: center; background: #faf9f7; }
+.drop { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; border: 2px dashed #c9c4bb; border-radius: 10px; padding: 22px 10px; cursor: pointer; text-align: center; background: #faf9f7; }
+.drop input[type=file] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; font-size: 16px; }
+.drop:focus-within { border-color: #d9480f; }
 .drop.over { border-color: #d9480f; background: #fff4ec; }
 .drop-main { font-weight: 600; }
 .drop-sub { font-size: 12px; color: #777; }
@@ -47,8 +50,22 @@ label select { margin-left: 6px; }
 /* 图纸 */
 .stats { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-bottom: 10px; font-size: 14px; }
 .stats b { color: #d9480f; }
-.canvas-box { overflow: auto; max-height: 78vh; border: 1px solid #ddd; border-radius: 6px; background: #fafafa; }
-.canvas-box canvas { display: block; margin: 0 auto; }
+.canvas-box { overflow: auto; max-width: 100%; min-width: 0; max-height: 78vh; max-height: 78dvh; border: 1px solid #ddd; border-radius: 6px; background: #fafafa; -webkit-overflow-scrolling: touch; touch-action: pan-x pan-y; overscroll-behavior: contain; }
+.canvas-box canvas { display: block; margin: 0 auto; cursor: crosshair; touch-action: pan-x pan-y; }
+.zoom-line { display: flex; align-items: center; gap: 6px; margin: 6px 0; }
+.zoom-line input[type=range] { flex: 1; min-width: 80px; }
+.editor { position: sticky; top: 8px; z-index: 5; border: 1px solid #e7c3b0; background: #fff8f4; border-radius: 8px; padding: 8px 10px; margin: 0 0 10px; }
+.editor-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.editor-head span { flex: 1; }
+.editor-err { color: #9b2c00; font-size: 12px; margin: 4px 0; }
+.editor-pick select { max-width: 100%; }
+.editor-swatches { display: flex; flex-wrap: wrap; gap: 4px; max-height: 132px; overflow: auto; margin-top: 6px; }
+.editor-swatches button { min-width: 36px; height: 28px; padding: 0 4px; border: 1px solid #333; border-radius: 3px; font: bold 11px Arial, sans-serif; }
+.board-panel { font-size: 13px; margin: 0 0 10px; padding: 8px 10px; background: #fff8f4; border: 1px solid #f0d5c4; border-radius: 8px; }
+.board-panel p { margin: 0 0 4px; }
+.boards { margin: 0; padding-left: 1.2em; max-height: 168px; overflow: auto; }
+.legend-wrap { overflow-x: auto; max-width: 100%; min-width: 0; -webkit-overflow-scrolling: touch; }
+.legend tbody tr.arm { outline: 1px dashed #e7c3b0; }
 .legend-title { margin-top: 18px; }
 .legend { border-collapse: collapse; width: 100%; font-size: 13px; }
 .legend th, .legend td { border-bottom: 1px solid #eee; padding: 4px 8px; text-align: left; }
@@ -63,7 +80,28 @@ label select { margin-left: 6px; }
 
 #print-root { display: none; }
 
-@media (max-width: 860px) { .layout { grid-template-columns: 1fr; } .panel { position: static; max-height: none; } }
+@media (max-width: 860px) {
+  body { padding-bottom: env(safe-area-inset-bottom); }
+  .top, .layout, .foot { padding-left: max(12px, env(safe-area-inset-left)); padding-right: max(12px, env(safe-area-inset-right)); }
+  .layout { grid-template-columns: 1fr; gap: 12px; }
+  .panel { position: static; max-height: none; }
+  .main { min-height: 0; padding: 12px; }
+  button, select, input[type=number], input[type=text] { font-size: 16px; min-height: 44px; }
+  input[type=range] { height: 44px; }
+  .seg { display: flex; width: 100%; }
+  .seg button { flex: 1; min-height: 44px; padding: 8px 4px; }
+  .drop { min-height: 104px; }
+  #btnPng, #btnPrint, #btnPortrait { width: 100%; }
+  .zoom-line button { min-width: 44px; min-height: 44px; }
+  .editor-swatches button { min-width: 44px; min-height: 44px; font-size: 12px; }
+  .legend { min-width: 560px; }
+  body.editing { padding-bottom: calc(46dvh + 16px); }
+  .editor:not([hidden]) {
+    position: fixed; top: auto; left: 8px; right: 8px; bottom: max(8px, env(safe-area-inset-bottom));
+    z-index: 20; max-height: 46vh; max-height: 46dvh; overflow: auto;
+    box-shadow: 0 8px 28px rgba(0,0,0,.18);
+  }
+}
 
 /* ========== 打印 ========== */
 @media print {
@@ -73,6 +111,7 @@ label select { margin-left: 6px; }
   .print-page { page-break-after: always; break-after: page; font: 10pt/1.35 "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; color: #000; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .print-page:last-child { page-break-after: auto; break-after: auto; }
   .pl-head { display: flex; justify-content: space-between; gap: 8px; height: 10mm; align-items: center; border-bottom: 0.4mm solid #000; margin-bottom: 2mm; font-size: 9pt; }
+  .pl-head.wrap { height: auto; min-height: 10mm; align-items: flex-start; flex-wrap: wrap; }
   .pl-img { display: block; margin: 0 auto; }
   .pl-chips { display: flex; flex-wrap: wrap; margin-top: 3mm; }
   .pl-chip { width: 31mm; height: 6mm; display: flex; align-items: center; gap: 1.5mm; font-size: 7.5pt; white-space: nowrap; overflow: hidden; }

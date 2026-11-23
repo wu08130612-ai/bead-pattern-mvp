@@ -1,0 +1,422 @@
+{
+ "url": "file:///workspace/index.html",
+ "checks": [
+  {
+   "name": "empty state",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "no external requests while generating",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "default 50x50 24 colors",
+   "ok": true,
+   "detail": 24
+  },
+  {
+   "name": "cell selected",
+   "ok": true,
+   "detail": {
+    "x": 4,
+    "y": 6
+   }
+  },
+  {
+   "name": "editor visible",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "selected cell has a code",
+   "ok": true,
+   "detail": "M15"
+  },
+  {
+   "name": "invalid code rejected",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "invalid code did not change cell",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "cell code changed",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "new color hex is the palette hex",
+   "ok": true,
+   "detail": {
+    "code": "A1",
+    "hex": "#FAF4C8",
+    "count": 1,
+    "pct": 0.0004,
+    "no": 25
+   }
+  },
+  {
+   "name": "new color count is 1",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "old color count decreased",
+   "ok": true,
+   "detail": {
+    "before": 736,
+    "after": 735
+   }
+  },
+  {
+   "name": "bead total unchanged",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "percent sums to 1",
+   "ok": true,
+   "detail": 0.9999999999999999
+  },
+  {
+   "name": "row percent matches count",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "legend click sets the cell",
+   "ok": true,
+   "detail": "M15"
+  },
+  {
+   "name": "cell cleared",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "counts still balance",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "empty cell can be filled",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "arrow moves selection",
+   "ok": true,
+   "detail": {
+    "x": 5,
+    "y": 6
+   }
+  },
+  {
+   "name": "delete clears cell",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "escape deselects",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "editor hidden after escape",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "reselected",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "margin click deselects",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "second click on same cell deselects",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "50x50 is 4 boards with 3 partial",
+   "ok": true,
+   "detail": "2 行 × 2 列，共 4 块 29×29 拼豆板，其中 3 块是边缘余量（不足 29 格）"
+  },
+  {
+   "name": "panel lists boards",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "board print is 4 pattern pages",
+   "ok": true,
+   "detail": {
+    "orient": "portrait",
+    "cellMm": 6,
+    "cols": 29,
+    "rows": 35,
+    "tx": 1,
+    "ty": 1,
+    "pages": 4,
+    "pageMode": "board",
+    "boardSize": 29,
+    "boardCols": 2,
+    "boardRows": 2
+   }
+  },
+  {
+   "name": "print header names each board",
+   "ok": true,
+   "detail": "拼豆图纸 · portrait_renoir_romaine_lacaux · 50×50 格 · MARD · 24 色 · 共 2500 颗第 1/5 页 · 列 1–29 · 行 1–29 · 板 1（第1行第1列，整板） · 29×29"
+  },
+  {
+   "name": "29x29 is one full board",
+   "ok": true,
+   "detail": {
+    "head": "1 行 × 1 列，共 1 块 29×29 拼豆板，全部是整板",
+    "partial": 0,
+    "n": 1
+   }
+  },
+  {
+   "name": "30x40 has leftover boards",
+   "ok": true,
+   "detail": [
+    {
+     "i": 1,
+     "r": 1,
+     "c": 1,
+     "w": 29,
+     "h": 29,
+     "partial": false
+    },
+    {
+     "i": 2,
+     "r": 1,
+     "c": 2,
+     "w": 1,
+     "h": 29,
+     "partial": true
+    },
+    {
+     "i": 3,
+     "r": 2,
+     "c": 1,
+     "w": 29,
+     "h": 11,
+     "partial": true
+    },
+    {
+     "i": 4,
+     "r": 2,
+     "c": 2,
+     "w": 1,
+     "h": 11,
+     "partial": true
+    }
+   ]
+  },
+  {
+   "name": "portrait preset settings",
+   "ok": true,
+   "detail": {
+    "max": "16",
+    "denoise": "strong",
+    "bg": true,
+    "tol": "16",
+    "note": "已套用「人像优化」：16 色、较强去杂点、去除与边缘相连的背景（容差 16）。"
+   }
+  },
+  {
+   "name": "portrait uses fewer colors and removes background",
+   "ok": true,
+   "detail": {
+    "before": 24,
+    "after": 16,
+    "empty": 1059
+   }
+  },
+  {
+   "name": "portrait keeps the face",
+   "ok": true,
+   "detail": {
+    "e": 4,
+    "n": 256
+   }
+  },
+  {
+   "name": "selected an empty cell",
+   "ok": true,
+   "detail": {
+    "x": 0,
+    "y": 0,
+    "empty": 1013
+   }
+  },
+  {
+   "name": "empty cell of cat can be set",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "that cell can be cleared again",
+   "ok": true,
+   "detail": {
+    "before": {
+     "sel": {
+      "x": 0,
+      "y": 0
+     },
+     "empty": 1012
+    },
+    "afterSel": {
+     "x": 0,
+     "y": 0
+    },
+    "empty": 1013,
+    "mark": 7,
+    "cell0": -1
+   }
+  },
+  {
+   "name": "cell edit is not regenerated away",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "chrome desktop console clean",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "mobile page does not scroll sideways",
+   "ok": true,
+   "detail": {
+    "scrollW": 390,
+    "clientW": 390,
+    "btn": 44
+   }
+  },
+  {
+   "name": "mobile button is at least 44px",
+   "ok": true,
+   "detail": {
+    "scrollW": 390,
+    "clientW": 390,
+    "btn": 44
+   }
+  },
+  {
+   "name": "mobile pattern pans inside the canvas box",
+   "ok": true,
+   "detail": {
+    "box": 340,
+    "canvas": 1048,
+    "scroll": true
+   }
+  },
+  {
+   "name": "overview fits the pattern width",
+   "ok": true,
+   "detail": {
+    "box": 340,
+    "canvas": 336,
+    "zoom": 6
+   }
+  },
+  {
+   "name": "mobile editor open",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "mobile editor sits at the bottom",
+   "ok": true,
+   "detail": {
+    "x": 8,
+    "y": 437.765625,
+    "width": 374,
+    "height": 388.234375
+   }
+  },
+  {
+   "name": "zoom in works",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "chrome mobile console clean",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "360px width does not overflow",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "360px console clean",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "firefox generate has no external requests",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "firefox can select a cell",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "firefox can recolor a cell",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "firefox console clean",
+   "ok": true,
+   "detail": []
+  }
+ ],
+ "console": {
+  "chrome_desktop": [],
+  "chrome_mobile": [],
+  "chrome_360": [],
+  "firefox": []
+ },
+ "external": {},
+ "portrait": {
+  "before": {
+   "colors": 24,
+   "beads": 2500,
+   "empty": 0
+  },
+  "after": {
+   "colors": 16,
+   "beads": 1441,
+   "empty": 1059
+  },
+  "face_empty": {
+   "e": 4,
+   "n": 256
+  },
+  "opts": {
+   "max": "16",
+   "denoise": "strong",
+   "bg": true,
+   "tol": "16",
+   "note": "已套用「人像优化」：16 色、较强去杂点、去除与边缘相连的背景（容差 16）。"
+  }
+ }
+}

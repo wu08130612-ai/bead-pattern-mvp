@@ -292,5 +292,50 @@
     return { W, H, cells, legend, emptyCount, beadCount, ms: performance.now() - t0 };
   }
 
-  global.BeadQuantize = { sampleGrid, buildPattern };
+  /**
+   * 把 (x,y) 改成色板里的一个颜色，或 null（留空），并立刻重算图例、颗数、占比。
+   * color 必须是 {code, name, hex}，色值来自现有色板，这里不发明新颜色。
+   */
+  function editCell(pattern, x, y, color) {
+    const { W, H, cells, legend } = pattern;
+    const n = W * H;
+    const i = y * W + x;
+    const meta = Object.create(null);
+    const codes = new Array(n);
+    for (let k = 0; k < legend.length; k++) {
+      const it = legend[k];
+      meta[it.code] = { code: it.code, name: it.name, hex: it.hex };
+    }
+    for (let k = 0; k < n; k++) codes[k] = cells[k] < 0 ? null : legend[cells[k]].code;
+    const next = color ? color.code : null;
+    if (codes[i] === next) return pattern;
+    if (color) meta[color.code] = { code: color.code, name: color.name || '', hex: color.hex };
+    codes[i] = next;
+
+    const counts = Object.create(null);
+    let emptyCount = 0;
+    for (let k = 0; k < n; k++) {
+      const c = codes[k];
+      if (!c) emptyCount++;
+      else counts[c] = (counts[c] || 0) + 1;
+    }
+    const order = Object.keys(counts).sort((a, b) => (counts[b] - counts[a]) || (a < b ? -1 : a > b ? 1 : 0));
+    const index = Object.create(null);
+    order.forEach((code, k) => { index[code] = k; });
+    for (let k = 0; k < n; k++) cells[k] = codes[k] ? index[codes[k]] : -1;
+    const beadCount = n - emptyCount;
+    pattern.emptyCount = emptyCount;
+    pattern.beadCount = beadCount;
+    pattern.legend = order.map((code, k) => ({
+      no: k + 1,
+      code,
+      name: meta[code].name || '',
+      hex: meta[code].hex,
+      count: counts[code],
+      pct: beadCount ? counts[code] / beadCount : 0,
+    }));
+    return pattern;
+  }
+
+  global.BeadQuantize = { sampleGrid, buildPattern, editCell };
 })(window);

@@ -2,8 +2,9 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>照片转拼豆图纸 · 本地生成</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23d9480f'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -18,8 +19,8 @@
     <aside class="panel">
       <section>
         <h2>1. 上传图片</h2>
-        <label id="drop" class="drop" tabindex="0">
-          <input id="file" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+        <label id="drop" class="drop">
+          <input id="file" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" aria-label="上传图片">
           <span class="drop-main">点击选择或拖拽图片到这里</span>
           <span class="drop-sub">支持 JPG / PNG / WEBP，图片只在本机处理</span>
         </label>
@@ -51,6 +52,9 @@
 
       <section>
         <h2>3. 颜色</h2>
+        <button id="btnPortrait" type="button">人像优化</button>
+        <p class="hint">一键改为 16 色、较强去杂点，并去除与边缘相连的背景，用来减轻灰背景上的麻点。这是从边缘按颜色泛洪留空，不是 AI 抠图。</p>
+        <p id="presetNote" class="hint" hidden></p>
         <label>色板
           <select id="palette"></select>
         </label>
@@ -98,7 +102,19 @@
             <option value="no">序号（1、2、3…）</option>
           </select>
         </label>
-        <label>缩放 <input id="zoom" type="range" min="8" max="44" value="20"> <span id="zoomVal">20px</span></label>
+        <div class="zoom-line">
+          <span>缩放</span>
+          <button id="zoomOut" type="button" aria-label="缩小">－</button>
+          <input id="zoom" type="range" min="4" max="44" value="20" aria-label="缩放">
+          <button id="zoomIn" type="button" aria-label="放大">＋</button>
+          <span id="zoomVal">20px</span>
+        </div>
+        <div class="row">
+          <button id="zoomFit" type="button">总览</button>
+          <button id="zoomRead" type="button">看编号</button>
+        </div>
+        <p class="hint">手机上单指拖动画布，双指缩放格子。点格子可以改色号。</p>
+        <label class="check"><input id="showBoards" type="checkbox" checked> 显示 29×29 拼豆板分块</label>
         <div class="row">
           <label>打印方向
             <select id="printOrient">
@@ -113,6 +129,12 @@
               <option value="4">4 mm</option>
               <option value="5">5 mm</option>
               <option value="6">6 mm</option>
+            </select>
+          </label>
+          <label>分页
+            <select id="printPage">
+              <option value="auto" selected>自动</option>
+              <option value="board">按 29×29 板</option>
             </select>
           </label>
         </div>
@@ -133,13 +155,38 @@
       </div>
       <div id="result" hidden>
         <div class="stats" id="stats"></div>
-        <div class="canvas-box"><canvas id="pattern"></canvas></div>
-        <h2 class="legend-title">图例 / 用料清单 <span class="muted">（点击某行可高亮该颜色，再点取消）</span></h2>
+        <div id="editor" class="editor" hidden>
+          <div class="editor-head">
+            <b>单格编辑</b>
+            <span id="editorPos"></span>
+            <button id="editorCancel" type="button">取消选择</button>
+          </div>
+          <p id="editorCur" class="hint"></p>
+          <p id="editorErr" class="editor-err" hidden></p>
+          <div class="row">
+            <label>色号
+              <input id="editorCode" type="text" list="paletteCodes" placeholder="如 A23" autocomplete="off" spellcheck="false" enterkeyhint="done">
+            </label>
+            <datalist id="paletteCodes"></datalist>
+            <button id="editorApply" type="button" class="primary">改成此色</button>
+            <button id="editorClear" type="button">设为留空</button>
+          </div>
+          <label class="editor-pick">从色板选
+            <select id="editorPick"><option value="">选择色号…</option></select>
+          </label>
+          <div id="editorSwatches" class="editor-swatches"></div>
+          <p class="hint">点色块或图例的一行就换色。方向键移动，Esc 或「取消选择」退出，Delete 留空。</p>
+        </div>
+        <div id="boardPanel" class="board-panel" hidden></div>
+        <div class="canvas-box"><canvas id="pattern" title="点击格子修改色号"></canvas></div>
+        <h2 class="legend-title">图例 / 用料清单 <span id="legendHint" class="muted">（点击某行可高亮该颜色，再点取消）</span></h2>
+        <div class="legend-wrap">
         <table class="legend" id="legend">
           <thead><tr><th>色块</th><th>序号</th><th>色号</th><th>名称</th><th>HEX</th><th>颗数</th><th>占比</th></tr></thead>
           <tbody></tbody>
           <tfoot></tfoot>
         </table>
+        </div>
       </div>
     </main>
   </div>
